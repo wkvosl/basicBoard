@@ -1,49 +1,63 @@
 package basic.board;
 
 import basic.board.basicEntity.BasicEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "board")
 public class BoardEntity extends BasicEntity {
 
     @Id
     @GeneratedValue
-    private Long board_no;
-    private String board_title;
-    private String board_content;
-    private String board_writer;
+    @Column(name = "board_no")
+    private Long boardNo;
+    @Column(name = "board_title")
+    private String boardTitle;
+    @Column(name = "board_content")
+    private String boardContent;
+    @Column(name = "board_writer")
+    private String boardWriter;
 
-    public Long getBoard_no() {
-        return board_no;
+    @Column(name = "text_content")
+    private String textContent;
+
+    public Long getBoardNo() {
+        return boardNo;
     }
 
-    public void setBoard_no(Long board_no) {
-        this.board_no = board_no;
+    public void setBoardNo(Long boardNo) {
+        this.boardNo = boardNo;
     }
 
-    public String getBoard_title() {
-        return board_title;
+    public String getBoardTitle() {
+        return boardTitle;
     }
 
-    public void setBoard_title(String board_title) {
-        this.board_title = board_title;
+    public void setBoardTitle(String boardTitle) {
+        this.boardTitle = boardTitle;
     }
 
-    public String getBoard_content() {
-        return board_content;
+    public String getBoardContent() {
+        return boardContent;
     }
 
-    public void setBoard_content(String board_content) {
-        this.board_content = board_content;
+    public void setBoardContent(String boardContent) {
+        this.boardContent = boardContent;
     }
 
-    public String getBoard_writer() {
-        return board_writer;
+    public String getBoardWriter() {
+        return boardWriter;
     }
 
-    public void setBoard_writer(String board_writer) {
-        this.board_writer = board_writer;
+    public void setBoardWriter(String boardWriter) {
+        this.boardWriter = boardWriter;
+    }
+
+    public String getTextContent() {
+        return textContent;
+    }
+
+    public void setTextContent(String textContent) {
+        this.textContent = textContent;
     }
 }

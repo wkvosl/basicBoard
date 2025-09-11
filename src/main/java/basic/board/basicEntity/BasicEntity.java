@@ -1,54 +1,60 @@
 package basic.board.basicEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 
 import java.time.LocalDateTime;
 
 @MappedSuperclass
 public abstract class BasicEntity {
-    private String del_yn;
-    private String reg_user;
-    private LocalDateTime reg_date;
-    private String last_update_user;
-    private LocalDateTime last_update_date;
+    @Column(name = "del_yn")
+    private String delYn;
+    @Column(name = "reg_user")
+    private String regUser;
+    @Column(name = "reg_date")
+    private LocalDateTime regDate;
+    @Column(name = "last_update_user")
+    private String lastUpdateUser;
+    @Column(name = "last_update_date")
+    private LocalDateTime lastUpdateDate;
 
-    public String getDel_yn() {
-        return del_yn;
+    public String getDelYn() {
+        return delYn;
     }
 
-    public void setDel_yn(String del_yn) {
-        this.del_yn = del_yn;
+    public void setDelYn(String delYn) {
+        this.delYn = delYn;
     }
 
-    public String getReg_user() {
-        return reg_user;
+    public String getRegUser() {
+        return regUser;
     }
 
-    public void setReg_user(String reg_user) {
-        this.reg_user = reg_user;
+    public void setRegUser(String regUser) {
+        this.regUser = regUser;
     }
 
-    public LocalDateTime getReg_date() {
-        return reg_date;
+    public LocalDateTime getRegDate() {
+        return regDate;
     }
 
-    public void setReg_date(LocalDateTime reg_date) {
-        this.reg_date = reg_date;
+    public void setRegDate(LocalDateTime regDate) {
+        this.regDate = regDate;
     }
 
-    public String getLast_update_user() {
-        return last_update_user;
+    public String getLastUpdateUser() {
+        return lastUpdateUser;
     }
 
-    public void setLast_update_user(String last_update_user) {
-        this.last_update_user = last_update_user;
+    public void setLastUpdateUser(String lastUpdateUser) {
+        this.lastUpdateUser = lastUpdateUser;
     }
 
-    public LocalDateTime getLast_update_date() {
-        return last_update_date;
+    public LocalDateTime getLastUpdateDate() {
+        return lastUpdateDate;
     }
 
-    public void setLast_update_date(LocalDateTime last_update_date) {
-        this.last_update_date = last_update_date;
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 }
