@@ -36,11 +36,11 @@ public class BoardController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ){
-        Pageable pageable = PageRequest.of(page, size, Sort.by("boardNo").descending());
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by("boardNo").descending());
         Page<BoardEntity> boardPage = boardService.findAll(pageable);
 
         PageInfo pageInfo = new PageInfo(
-                boardPage.getNumber(),
+                boardPage.getNumber()+1,
                 boardPage.getSize(),
                 boardPage.getTotalPages(),
                 boardPage.getTotalElements(),
