@@ -34,10 +34,12 @@ public class BoardController {
     @GetMapping("/board/list")
     public BoardPageDTO<BoardEntity> getBoardPaging(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(defaultValue = "") String category
     ){
         Pageable pageable = PageRequest.of(page-1, size, Sort.by("boardNo").descending());
-        Page<BoardEntity> boardPage = boardService.findAll(pageable);
+        Page<BoardEntity> boardPage = boardService.findAllBySearch(pageable, category, search);
 
         PageInfo pageInfo = new PageInfo(
                 boardPage.getNumber()+1,
@@ -51,4 +53,6 @@ public class BoardController {
         );
         return new BoardPageDTO<>(boardPage.getContent(), pageInfo);
     }
+
+
 }

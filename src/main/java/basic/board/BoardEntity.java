@@ -21,6 +21,7 @@ public class BoardEntity extends BasicEntity {
     @Column(name = "text_content")
     private String textContent;
 
+
     public Long getBoardNo() {
         return boardNo;
     }
@@ -60,4 +61,5 @@ public class BoardEntity extends BasicEntity {
     public void setTextContent(String textContent) {
         this.textContent = textContent;
     }
+
 }
