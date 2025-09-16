@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
-    Page<BoardEntity> findAllByBoardTitle(String boardTitle, Pageable pageable);
-    Page<BoardEntity> findAllByBoardContent(String boardContent, Pageable pageable);
-    Page<BoardEntity> findAllByBoardWriter(String boardWriter, Pageable pageable);
+    Page<BoardEntity> findAllByBoardTitleContaining(String boardTitle, Pageable pageable);
+    Page<BoardEntity> findAllByBoardContentContaining(String boardContent, Pageable pageable);
+    Page<BoardEntity> findAllByBoardWriterContaining(String boardWriter, Pageable pageable);
     Page<BoardEntity> findAllByBoardTitleContainingOrBoardContentContainingOrBoardWriterContaining(Pageable pageable, String boardTitle, String boardContent, String boardWriter);
 }

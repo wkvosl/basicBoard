@@ -34,9 +34,9 @@ public class BoardService {
 
         // 카테고리에 따라 검색
         return switch (category) {
-            case "title" -> boardRepository.findAllByBoardTitle(search, pageable);
-            case "content" -> boardRepository.findAllByBoardContent(search, pageable);
-            case "writer" -> boardRepository.findAllByBoardWriter(search, pageable);
+            case "title" -> boardRepository.findAllByBoardTitleContaining(search, pageable);
+            case "content" -> boardRepository.findAllByBoardContentContaining(search, pageable);
+            case "writer" -> boardRepository.findAllByBoardWriterContaining(search, pageable);
             default ->
                 // 안전하게 전체 검색 fallback
                     boardRepository.findAllByBoardTitleContainingOrBoardContentContainingOrBoardWriterContaining(pageable, search, search, search);
