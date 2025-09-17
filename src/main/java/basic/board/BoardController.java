@@ -4,10 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 public class BoardController {
@@ -19,9 +18,14 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    //저장
-    public BoardEntity save(BoardEntity boardEntity) {
-
+    //저장 및 업데이트
+    @PostMapping("/board/save")
+    public BoardEntity save(@RequestBody BoardEntity boardEntity) {
+        if(boardEntity.getBoardNo() > 0){
+            boardEntity.setLastUpdateDate(LocalDateTime.now());
+        }else{
+            boardEntity.setRegDate(LocalDateTime.now());
+        }
         return boardService.save(boardEntity);
     }
     //상세
