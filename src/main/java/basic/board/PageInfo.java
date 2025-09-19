@@ -9,12 +9,14 @@ public class PageInfo {
         private boolean first;          // 첫 페이지 여부
         private boolean last;           // 마지막 페이지 여부
         private boolean empty;          // 비었는지 여부
+        private long boardTotal;        // 총 게시물
 
     public PageInfo() {
     }
 
     public PageInfo(int number, int size, int totalPages, long totalElements,
-                    int numberOfElements, boolean first, boolean last, boolean empty) {
+                    int numberOfElements, boolean first, boolean last, boolean empty,
+                    long boardTotal) {
             this.number = number;
             this.size = size;
             this.totalPages = totalPages;
@@ -23,6 +25,7 @@ public class PageInfo {
             this.first = first;
             this.last = last;
             this.empty = empty;
+            this.boardTotal = boardTotal;
         }
 
     public int getNumber() {
@@ -87,5 +90,13 @@ public class PageInfo {
 
     public void setEmpty(boolean empty) {
         this.empty = empty;
+    }
+
+    public Long getBoardTotal() {
+        return boardTotal;
+    }
+
+    public void setBoardTotal(Long boardTotal) {
+        this.boardTotal = boardTotal;
     }
 }

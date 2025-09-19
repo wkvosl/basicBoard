@@ -53,7 +53,8 @@ public class BoardController {
                 boardPage.getNumberOfElements(),
                 boardPage.isFirst(),
                 boardPage.isLast(),
-                boardPage.isEmpty()
+                boardPage.isEmpty(),
+                boardService.countBoardAllNotDeleted()
         );
         return new BoardPageDTO<>(boardPage.getContent(), pageInfo);
     }

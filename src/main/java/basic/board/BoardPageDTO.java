@@ -28,5 +28,4 @@ public class BoardPageDTO<T>{
         this.page = page;
     }
 
-
 }
