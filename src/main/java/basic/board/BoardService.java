@@ -20,9 +20,6 @@ public class BoardService {
         this.queryFactory = queryFactory;
     }
 
-
-
-
     public BoardEntity save(BoardEntity boardEntity) {
         return boardRepository.save(boardEntity);
     }
@@ -33,15 +30,14 @@ public class BoardService {
 
     public Long countBoardAllNotDeleted() {
         QBoardEntity boardEntity = QBoardEntity.boardEntity;
-        Long total = Optional.ofNullable(
+
+        return Optional.ofNullable(
                 queryFactory
                         .select(boardEntity.count())
                         .from(boardEntity)
                         .where(boardEntity.delYn.eq("N"))
                         .fetchOne()
         ).orElse(0L);
-
-        return total;
     }
 
     public Page<BoardEntity> findAllBySearch(Pageable pageable, String category, String search) {
@@ -82,4 +78,13 @@ public class BoardService {
         return new PageImpl<>(boardList, pageable, total);
     }
 
+    public void deleteById(BoardEntity boardEntity) {
+
+        boardRepository.findById(boardEntity.getBoardNo())
+                .orElseThrow(()-> new RuntimeException("삭제할 게시물이 없습니다."));
+
+        boardEntity.setDelYn("Y");
+        boardRepository.save(boardEntity);
+
+    }
 }
