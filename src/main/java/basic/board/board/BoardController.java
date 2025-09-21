@@ -1,5 +1,6 @@
-package basic.board;
+package basic.board.board;
 
+import basic.board.page.PageInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,4 @@
-package basic.board;
+package basic.board.board;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;

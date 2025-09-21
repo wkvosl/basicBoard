@@ -1,4 +1,6 @@
-package basic.board;
+package basic.board.board;
+
+import basic.board.page.PageInfo;
 
 import java.util.List;
 

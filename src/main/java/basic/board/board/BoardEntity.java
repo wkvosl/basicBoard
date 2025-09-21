@@ -1,4 +1,4 @@
-package basic.board;
+package basic.board.board;
 
 import basic.board.basicEntity.BasicEntity;
 import jakarta.persistence.*;
