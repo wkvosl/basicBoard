@@ -64,6 +64,7 @@ public class BoardService {
                 .where(builder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(boardEntity.regDate.desc())
                 .fetch();
 
         Long total = Optional.ofNullable(

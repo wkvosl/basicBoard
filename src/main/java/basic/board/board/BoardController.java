@@ -24,7 +24,7 @@ public class BoardController {
     //저장 및 업데이트
     @PostMapping("/board/save")
     public BoardEntity save(@RequestBody BoardEntity boardEntity) {
-        if(boardEntity.getBoardNo() > 0){
+        if(boardEntity.getBoardNo() != null){
             boardEntity.setLastUpdateDate(LocalDateTime.now());
         }else{
             boardEntity.setRegDate(LocalDateTime.now());

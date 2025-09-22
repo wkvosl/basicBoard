@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class BoardEntity extends BasicEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_no")
     private Long boardNo;
     @Column(name = "board_title")
