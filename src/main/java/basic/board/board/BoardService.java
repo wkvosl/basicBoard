@@ -36,6 +36,7 @@ public class BoardService {
                         .select(boardEntity.count())
                         .from(boardEntity)
                         .where(boardEntity.delYn.eq("N"))
+                        .orderBy(boardEntity.regDate.desc())
                         .fetchOne()
         ).orElse(0L);
     }
@@ -62,9 +63,9 @@ public class BoardService {
         List<BoardEntity> boardList = queryFactory
                 .selectFrom(boardEntity)
                 .where(builder)
+                .orderBy(boardEntity.regDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(boardEntity.regDate.desc())
                 .fetch();
 
         Long total = Optional.ofNullable(
