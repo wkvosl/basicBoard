@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,35 +29,51 @@ public class AttachFileController {
     }
 
     @PostMapping(value = "/file/save")
-    public boolean fileSave(@RequestPart("file") MultipartFile file) throws IOException {
-        if(file.isEmpty()){
-            return false;
+    public List<AttachFileResultDTO> fileSave(@RequestPart("files") List<MultipartFile> files) throws IOException {
+
+        List<AttachFileResultDTO> results = new ArrayList<>();
+
+        if (files == null || files.isEmpty()) {
+            return results;
         }
 
-        String realpath = uploadPath + file.getOriginalFilename();
-        String resourcePath = downLoadPath + file.getOriginalFilename();
 
-        String fileName = file.getOriginalFilename();
-        String ext = (fileName != null && fileName.contains(".")) ? fileName.substring(fileName.lastIndexOf(".")+1) : null;
-        String newFileName = UUID.randomUUID() + (ext.isEmpty() ? "" : "." + ext);
-        long fileSize = file.getSize();
+        for(MultipartFile file : files) {
 
-        //파일 저장
-        String saveFilePath = uploadPath + newFileName;
-        File saveFile = new File(saveFilePath);
-        file.transferTo(saveFile);
+            if(file.isEmpty()) {
+                continue;
+            }
 
-        AttachFileEntity attachFileEntity = new AttachFileEntity();
-        attachFileEntity.setPathName(realpath);
-        attachFileEntity.setFileName(newFileName);
-        attachFileEntity.setOriginalFileName(fileName);
-        attachFileEntity.setSize(fileSize);
-        attachFileEntity.setExtension(ext);
-        attachFileEntity.setResourcePathName(resourcePath);
-        attachFileEntity.setRegDate(LocalDateTime.now());
+//            if(!file.getContentType().startsWith("image")){
+//                throw new RuntimeException("이미지 만");
+//            }
+
+            String realpath = uploadPath + file.getOriginalFilename();
+            String resourcePath = downLoadPath + file.getOriginalFilename();
+
+            String fileName = file.getOriginalFilename();
+            String ext = (fileName != null && fileName.contains(".")) ? fileName.substring(fileName.lastIndexOf(".")+1) : null;
+            String newFileName = UUID.randomUUID() + (ext.isEmpty() ? "" : "." + ext);
+            long fileSize = file.getSize();
+
+            //파일 저장
+            String saveFilePath = uploadPath + newFileName;
+            File saveFile = new File(saveFilePath);
+            file.transferTo(saveFile);
+
+            AttachFileEntity attachFileEntity = new AttachFileEntity();
+            attachFileEntity.setPathName(realpath);
+            attachFileEntity.setFileName(newFileName);
+            attachFileEntity.setOriginalFileName(fileName);
+            attachFileEntity.setSize(fileSize);
+            attachFileEntity.setExtension(ext);
+            attachFileEntity.setResourcePathName(resourcePath);
+            attachFileEntity.setRegDate(LocalDateTime.now());
 
         attachFileService.attachFileSave(attachFileEntity);
 
-        return true;
+            results.add(new AttachFileResultDTO(attachFileEntity.getAttachFileNo(),true));
+        }
+        return results;
     }
 }
