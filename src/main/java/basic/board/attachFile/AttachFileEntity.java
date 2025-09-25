@@ -11,6 +11,8 @@ public class AttachFileEntity extends BasicEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "attach_file_no")
     private Long attachFileNo;
+    @Column(name = "gallery_no")
+    private Long galleryNo;
     @Column(name = "path_name")
     private String pathName;
     @Column(name = "file_name")
@@ -30,6 +32,14 @@ public class AttachFileEntity extends BasicEntity {
 
     public void setAttachFileNo(Long attachFileNo) {
         this.attachFileNo = attachFileNo;
+    }
+
+    public Long getGalleryNo() {
+        return galleryNo;
+    }
+
+    public void setGalleryNo(Long galleryNo) {
+        this.galleryNo = galleryNo;
     }
 
     public String getPathName() {

@@ -1,28 +1,55 @@
 package basic.board.gallery;
 
+import basic.board.attachFile.AttachFileRequestDTO;
+import basic.board.attachFile.AttachFileService;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GalleryService {
 
   private final GalleryRepository galleryRepository;
   private final JPAQueryFactory queryFactory;
-    public GalleryService(GalleryRepository galleryRepository, JPAQueryFactory queryFactory) {
+  private final AttachFileService attachFileService;
+
+    public GalleryService(GalleryRepository galleryRepository, JPAQueryFactory queryFactory, AttachFileService attachFileService) {
         this.galleryRepository = galleryRepository;
         this.queryFactory = queryFactory;
+        this.attachFileService = attachFileService;
     }
 
+    @Transactional
     public GalleryEntity save(GalleryEntity galleryEntity) {
-        return galleryRepository.save(galleryEntity);
+
+        GalleryEntity result = galleryRepository.save(galleryEntity);
+
+        if (result.getAttachFileNo() != null) {
+
+            AttachFileRequestDTO requestDTO = new AttachFileRequestDTO();
+            requestDTO.setGalleryId(result.getGalleryNo());
+
+            List<Long> fileIds = Arrays.stream(result.getAttachFileNo().split(","))
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+
+            requestDTO.setFileIds(fileIds);
+
+            attachFileService.updateWithGalleryNo(requestDTO);
+        }
+
+        return result;
     }
+
 
     public GalleryEntity findById(Long id) {
         return galleryRepository.findById(id).orElse(null);

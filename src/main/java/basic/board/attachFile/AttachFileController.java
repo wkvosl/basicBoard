@@ -2,6 +2,7 @@ package basic.board.attachFile;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +38,6 @@ public class AttachFileController {
             return results;
         }
 
-
         for(MultipartFile file : files) {
 
             if(file.isEmpty()) {
@@ -72,8 +72,18 @@ public class AttachFileController {
 
         attachFileService.attachFileSave(attachFileEntity);
 
-            results.add(new AttachFileResultDTO(attachFileEntity.getAttachFileNo(),true));
+            results.add(new AttachFileResultDTO(attachFileEntity.getAttachFileNo()));
         }
         return results;
+    }
+
+    /*파일의 galleryNo 업데이트
+    * 실제 파일 업데이트는 하지 않음.
+    * 생성 or 삭제*/
+    @PostMapping(value = "/file/update")
+    public AttachFileResultDTO fileUpdate(@RequestBody AttachFileRequestDTO payload) {
+        System.out.println(payload);
+        long resultCnt = attachFileService.updateWithGalleryNo(payload);
+       return new AttachFileResultDTO(resultCnt > 0);
     }
 }
