@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -91,38 +92,52 @@ public class GalleryService {
             }
         }
 
-        List<GalleryWithFileDTO> results = queryFactory
-                .select(Projections.fields(
-                        GalleryWithFileDTO.class,
-                        galleryEntity.galleryNo,
-                        galleryEntity.galleryTitle,
-                        galleryEntity.galleryContent,
-                        galleryEntity.galleryWriter,
-                        galleryEntity.regDate,
-                        galleryEntity.delYn
-                ))
-                .from(galleryEntity)
+        //Gallery 조회
+        List<GalleryEntity> galleryList = queryFactory
+                .selectFrom(galleryEntity)
                 .where(builder)
                 .orderBy(galleryEntity.regDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-// files 채우기
-        results.forEach(gallery -> {
-            List<AttachFileDTO> files = queryFactory
-                    .select(Projections.fields(
-                            AttachFileDTO.class,
-                            attachFileEntity.attachFileNo,
-                            attachFileEntity.fileName,
-                            attachFileEntity.pathName
-                    ))
-                    .from(attachFileEntity)
-                    .where(attachFileEntity.galleryNo.eq(gallery.getGalleryNo())
-                            .and(attachFileEntity.delYn.eq("N")))
-                    .fetch();
+        //DTO 변환
+        List<GalleryWithFileDTO> result = galleryList.stream().map(g -> {
+            GalleryWithFileDTO dto = new GalleryWithFileDTO();
+            dto.setGalleryNo(g.getGalleryNo());
+            dto.setGalleryTitle(g.getGalleryTitle());
+            dto.setGalleryContent(g.getGalleryContent());
+            dto.setGalleryWriter(g.getGalleryWriter());
+            dto.setRegDate(g.getRegDate());
+            dto.setDelYn(g.getDelYn());
+            return dto;
+        }).toList();
 
-            gallery.setFiles(files);
+        //AttachFile 조회 in절을 위한 갤러리 id 리스트
+        List<Long> galleryNos = galleryList.stream().map(GalleryEntity::getGalleryNo).toList();
+
+        //AttachFile 조회 in절
+        List<AttachFileDTO> attachFiles = queryFactory
+                .select(Projections.constructor(
+                        AttachFileDTO.class,
+                        attachFileEntity.attachFileNo,
+                        attachFileEntity.galleryNo,
+                        attachFileEntity.fileName,
+                        attachFileEntity.pathName
+                ))
+                .from(attachFileEntity)
+                .where(attachFileEntity.galleryNo.in(galleryNos)
+                        .and(attachFileEntity.delYn.eq("N")))
+                .fetch();
+
+        //GalleryWithFileDTO에 AttachFileDTO 매핑
+        Map<Long, List<AttachFileDTO>> filesMap = attachFiles.stream()
+                .collect(Collectors.groupingBy(AttachFileDTO::getGalleryNo));
+        result.forEach(dto -> {
+            List<AttachFileDTO> files = filesMap.get(dto.getGalleryNo());
+            if(files != null) {
+                dto.setFiles(files);
+            }
         });
 
         Long total = Optional.ofNullable(
@@ -134,7 +149,7 @@ public class GalleryService {
         ).orElse(0L);
 
 
-        return new PageImpl<>(results, pageable, total);
+        return new PageImpl<>(result, pageable, total);
     }
 
     public void deleteById(GalleryEntity galleryEntity) {
