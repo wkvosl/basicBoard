@@ -39,14 +39,14 @@ public class GalleryController {
     //전체목록
 
     @GetMapping("/gallery/list")
-    public GalleryPageDTO<GalleryEntity> getBoardPaging(
+    public GalleryPageResponseDTO<GalleryWithFileDTO> getBoardPaging(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "") String search,
             @RequestParam(defaultValue = "") String category
     ){
         Pageable pageable = PageRequest.of(page-1, size, Sort.by("galleryNo").descending());
-        Page<GalleryEntity> galleryPage = galleryService.findAllBySearch(pageable, category, search);
+        Page<GalleryWithFileDTO> galleryPage = galleryService.findAllBySearch(pageable, category, search);
 
         PageInfo pageInfo = new PageInfo(
                 galleryPage.getNumber()+1,
@@ -59,7 +59,7 @@ public class GalleryController {
                 galleryPage.isEmpty(),
                 galleryService.countGalleryAllNotDeleted()
         );
-        return new GalleryPageDTO<>(galleryPage.getContent(), pageInfo);
+        return new GalleryPageResponseDTO<>(galleryPage.getContent(), pageInfo);
     }
 
     @PostMapping("/gallery/delete")

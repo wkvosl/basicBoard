@@ -1,8 +1,11 @@
 package basic.board.gallery;
 
+import basic.board.attachFile.AttachFileDTO;
 import basic.board.attachFile.AttachFileRequestDTO;
 import basic.board.attachFile.AttachFileService;
+import basic.board.attachFile.QAttachFileEntity;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -68,9 +71,10 @@ public class GalleryService {
         ).orElse(0L);
     }
 
-    public Page<GalleryEntity> findAllBySearch(Pageable pageable, String category, String search) {
+    public Page<GalleryWithFileDTO> findAllBySearch(Pageable pageable, String category, String search) {
 
         QGalleryEntity galleryEntity = QGalleryEntity.galleryEntity;
+        QAttachFileEntity attachFileEntity = QAttachFileEntity.attachFileEntity;
         BooleanBuilder builder = new BooleanBuilder();
 
         builder.and(galleryEntity.delYn.eq("N"));
@@ -87,13 +91,39 @@ public class GalleryService {
             }
         }
 
-        List<GalleryEntity> galleryList = queryFactory
-                .selectFrom(galleryEntity)
+        List<GalleryWithFileDTO> results = queryFactory
+                .select(Projections.fields(
+                        GalleryWithFileDTO.class,
+                        galleryEntity.galleryNo,
+                        galleryEntity.galleryTitle,
+                        galleryEntity.galleryContent,
+                        galleryEntity.galleryWriter,
+                        galleryEntity.regDate,
+                        galleryEntity.delYn
+                ))
+                .from(galleryEntity)
                 .where(builder)
                 .orderBy(galleryEntity.regDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+
+// files 채우기
+        results.forEach(gallery -> {
+            List<AttachFileDTO> files = queryFactory
+                    .select(Projections.fields(
+                            AttachFileDTO.class,
+                            attachFileEntity.attachFileNo,
+                            attachFileEntity.fileName,
+                            attachFileEntity.pathName
+                    ))
+                    .from(attachFileEntity)
+                    .where(attachFileEntity.galleryNo.eq(gallery.getGalleryNo())
+                            .and(attachFileEntity.delYn.eq("N")))
+                    .fetch();
+
+            gallery.setFiles(files);
+        });
 
         Long total = Optional.ofNullable(
                 queryFactory
@@ -104,13 +134,13 @@ public class GalleryService {
         ).orElse(0L);
 
 
-        return new PageImpl<>(galleryList, pageable, total);
+        return new PageImpl<>(results, pageable, total);
     }
 
     public void deleteById(GalleryEntity galleryEntity) {
 
         galleryRepository.findById(galleryEntity.getGalleryNo())
-                .orElseThrow(()-> new RuntimeException("삭제할 게시물이 없습니다."));
+                .orElseThrow(() -> new RuntimeException("삭제할 게시물이 없습니다."));
 
         galleryEntity.setDelYn("Y");
         galleryRepository.save(galleryEntity);

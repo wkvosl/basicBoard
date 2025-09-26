@@ -1,15 +1,16 @@
 package basic.board.gallery;
 
 import basic.board.page.PageInfo;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public class GalleryPageDTO<T>{
+public class GalleryPageResponseDTO<T>{
 
     private List<T> content;
     private PageInfo page;
 
-    public GalleryPageDTO(List<T> content, PageInfo page) {
+    public GalleryPageResponseDTO(List<T> content, PageInfo page) {
         this.content = content;
         this.page = page;
     }
