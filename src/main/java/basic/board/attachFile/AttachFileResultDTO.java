@@ -10,6 +10,8 @@ public class AttachFileResultDTO {
         this.success = success;
     }
 
+
+
     public AttachFileResultDTO(Long fileId) {
         this.fileId = fileId;
     }

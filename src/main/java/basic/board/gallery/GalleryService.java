@@ -8,6 +8,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class GalleryService {
+
+    @Value("${file.download.url}")
+    private String fileDownloadUrl;
 
   private final GalleryRepository galleryRepository;
   private final JPAQueryFactory queryFactory;
@@ -122,8 +126,8 @@ public class GalleryService {
                         AttachFileDTO.class,
                         attachFileEntity.attachFileNo,
                         attachFileEntity.galleryNo,
-                        attachFileEntity.fileName,
-                        attachFileEntity.pathName
+                        attachFileEntity.originalFileName,
+                        attachFileEntity.resourcePathName
                 ))
                 .from(attachFileEntity)
                 .where(attachFileEntity.galleryNo.in(galleryNos)

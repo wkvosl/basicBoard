@@ -27,18 +27,22 @@ public class AttachFileService {
     /**
      * (galleryNo) 매핑을 위한 파일의 업데이트
      * */
-    public long updateWithGalleryNo(AttachFileRequestDTO payload) {
+    public long updateWithGalleryNo(AttachFileRequestDTO dto) {
 
         QAttachFileEntity attachFileEntity = QAttachFileEntity.attachFileEntity;
 
         long updatedCount =
                 queryFactory
                 .update(attachFileEntity)
-                .set(attachFileEntity.galleryNo, payload.getGalleryId())
-                .where(attachFileEntity.attachFileNo.in(payload.getFileIds()))
+                .set(attachFileEntity.galleryNo, dto.getGalleryId())
+                .where(attachFileEntity.attachFileNo.in(dto.getFileIds()))
                 .execute();
 
         return updatedCount;
     }
 
+    //업로드 파일 삭제
+    public void uploadFileDelete(Long id){
+        attachFileRepository.deleteById(id);
+    }
 }

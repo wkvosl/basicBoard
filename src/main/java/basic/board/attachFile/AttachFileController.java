@@ -1,10 +1,7 @@
 package basic.board.attachFile;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -48,12 +45,14 @@ public class AttachFileController {
 //                throw new RuntimeException("이미지 만");
 //            }
 
-            String realpath = uploadPath + file.getOriginalFilename();
-            String resourcePath = downLoadPath + file.getOriginalFilename();
 
             String fileName = file.getOriginalFilename();
             String ext = (fileName != null && fileName.contains(".")) ? fileName.substring(fileName.lastIndexOf(".")+1) : null;
             String newFileName = UUID.randomUUID() + (ext.isEmpty() ? "" : "." + ext);
+
+            String realpath = uploadPath + newFileName;
+            String resourcePath = downLoadPath + newFileName;
+
             long fileSize = file.getSize();
 
             //파일 저장
@@ -78,12 +77,24 @@ public class AttachFileController {
     }
 
     /*파일의 galleryNo 업데이트
-    * 실제 파일 업데이트는 하지 않음.
     * 생성 or 삭제*/
     @PostMapping(value = "/file/update")
     public AttachFileResultDTO fileUpdate(@RequestBody AttachFileRequestDTO payload) {
         System.out.println(payload);
         long resultCnt = attachFileService.updateWithGalleryNo(payload);
        return new AttachFileResultDTO(resultCnt > 0);
+    }
+
+    @PostMapping(value="/file/delete/{id}")
+    public AttachFileResultDTO uploadFileDelete(@PathVariable Long id){
+        System.out.println(id);
+
+        try{
+            attachFileService.uploadFileDelete(id);
+            return new AttachFileResultDTO(true);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

@@ -1,16 +1,17 @@
 package basic.board.attachFile;
 
 public class AttachFileDTO {
+
     private Long attachFileNo;
     private Long galleryNo;
-    private String fileName;
-    private String pathName;
+    private String originalFileName;
+    private String resourcePathName;
 
-    public AttachFileDTO(Long attachFileNo, Long galleryNo, String fileName, String pathName) {
+    public AttachFileDTO(Long attachFileNo, Long galleryNo, String originalFileName, String resourcePathName) {
         this.attachFileNo = attachFileNo;
         this.galleryNo = galleryNo;
-        this.fileName = fileName;
-        this.pathName = pathName;
+        this.originalFileName = originalFileName;
+        this.resourcePathName = resourcePathName;
     }
 
     public Long getAttachFileNo() {
@@ -29,19 +30,19 @@ public class AttachFileDTO {
         this.galleryNo = galleryNo;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getOriginalFileName() {
+        return originalFileName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
     }
 
-    public String getPathName() {
-        return pathName;
+    public String getResourcePathName() {
+        return resourcePathName;
     }
 
-    public void setPathName(String pathName) {
-        this.pathName = pathName;
+    public void setResourcePathName(String resourcePathName) {
+        this.resourcePathName = resourcePathName;
     }
 }
