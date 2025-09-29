@@ -3,6 +3,9 @@ package basic.board.attachFile;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.util.Optional;
+
 @Service
 public class AttachFileService {
 
@@ -16,6 +19,7 @@ public class AttachFileService {
 
     public void attachFileSave(AttachFileEntity attachFileEntity) {
 
+        attachFileEntity.setDelYn("N");
         try {
             attachFileRepository.save(attachFileEntity);
         }catch (RuntimeException e){
@@ -43,6 +47,22 @@ public class AttachFileService {
 
     //업로드 파일 삭제
     public void uploadFileDelete(Long id){
+
+        Optional<AttachFileEntity> delfile = attachFileRepository.findById(id);
+        if(delfile.isEmpty()) return;
+
+        AttachFileEntity fileEntity = delfile.get();
+        String filePath = fileEntity.getPathName();
+
+        File file = new File(filePath);
+        if(file.exists()) {
+            boolean deleted = file.delete();
+            if(!deleted){
+                System.out.println("삭제실패");
+            }
+        }
+
         attachFileRepository.deleteById(id);
+
     }
 }
