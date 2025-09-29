@@ -19,7 +19,6 @@ public class AttachFileService {
 
     public void attachFileSave(AttachFileEntity attachFileEntity) {
 
-        attachFileEntity.setDelYn("N");
         try {
             attachFileRepository.save(attachFileEntity);
         }catch (RuntimeException e){

@@ -68,6 +68,7 @@ public class AttachFileController {
             attachFileEntity.setExtension(ext);
             attachFileEntity.setResourcePathName(resourcePath);
             attachFileEntity.setRegDate(LocalDateTime.now());
+            attachFileEntity.setDelYn("N");
 
         attachFileService.attachFileSave(attachFileEntity);
 
