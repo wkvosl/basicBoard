@@ -58,9 +58,46 @@ public class GalleryService {
         return result;
     }
 
+    public GalleryWithFileDTO findById(Long id){
+        QGalleryEntity galleryEntity = QGalleryEntity.galleryEntity;
+        QAttachFileEntity attachFileEntity = QAttachFileEntity.attachFileEntity;
 
-    public GalleryEntity findById(Long id) {
-        return galleryRepository.findById(id).orElse(null);
+        //Gallery 조회
+        GalleryEntity gallery = queryFactory
+                .selectFrom(galleryEntity)
+                .where(galleryEntity.galleryNo.eq(id))
+                .fetchOne();
+
+        if(gallery == null) {return  null;}
+
+        //DTO 변환
+        GalleryWithFileDTO result = new GalleryWithFileDTO();
+        result.setGalleryNo(gallery.getGalleryNo());
+        result.setGalleryTitle(gallery.getGalleryTitle());
+        result.setGalleryContent(gallery.getGalleryContent());
+        result.setGalleryWriter(gallery.getGalleryWriter());
+        result.setRegDate(gallery.getRegDate());
+        result.setDelYn(gallery.getDelYn());
+
+        // AttachFile 조회
+        List<AttachFileDTO> attachFiles = queryFactory
+                .select(Projections.constructor(
+                        AttachFileDTO.class,
+                        attachFileEntity.attachFileNo,
+                        attachFileEntity.galleryNo,
+                        attachFileEntity.originalFileName,
+                        attachFileEntity.resourcePathName
+                ))
+                .from(attachFileEntity)
+                .where(attachFileEntity.galleryNo.eq(id)
+                        .and(attachFileEntity.delYn.eq("N")))
+                .fetch();
+
+        //DTO에 파일 세팅
+        result.setFiles(attachFiles);
+
+        return result;
+
     }
 
     public Long countGalleryAllNotDeleted() {

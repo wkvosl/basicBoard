@@ -33,11 +33,11 @@ public class GalleryController {
     }
     //상세
     @GetMapping("/gallery/{id}")
-    public GalleryEntity findById(@PathVariable Long id) {
+    public GalleryWithFileDTO findById(@PathVariable Long id) {
         return galleryService.findById(id);
+
     }
     //전체목록
-
     @GetMapping("/gallery/list")
     public GalleryPageResponseDTO<GalleryWithFileDTO> getBoardPaging(
             @RequestParam(defaultValue = "1") int page,
